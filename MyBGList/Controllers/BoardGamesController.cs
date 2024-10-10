@@ -8,6 +8,7 @@ namespace MyBGList.Controllers;
 public class BoardGamesController(ILogger<BoardGamesController> logger) : ControllerBase
 {
     [HttpGet(Name = "GetBoardGames")]
+    [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
     public IEnumerable<BoardGame> GetBoardGames()
     {
         return
