@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyBGList.DTO;
-using MyBGList.Model;
+using MyBGList.Models;
 
 namespace MyBGList.Controllers;
 
@@ -9,7 +9,7 @@ namespace MyBGList.Controllers;
 public class BoardGamesController(ILogger<BoardGamesController> logger) : ControllerBase
 {
     [HttpGet(Name = "GetBoardGames")]
-    [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
+    [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 120)]
     public RestDTO<BoardGame[]> GetBoardGames()
     {
         var data = new BoardGame[] {
