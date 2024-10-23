@@ -1,6 +1,7 @@
-@MyBGList_HostAddress = http://localhost:5079
+@Host = https://localhost:40443
 
-GET {{MyBGList_HostAddress}}/weatherforecast/
+GET {{Host}}/api/board-games
 Accept: application/json
 
 ###
+
