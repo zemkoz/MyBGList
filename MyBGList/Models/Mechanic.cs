@@ -20,5 +20,5 @@ public class Mechanic
     [Required]
     public DateTime LastModifiedDate { get; set; }
     
-    public ICollection<BoardGame2Mechanic>? BoardGames2Mechanics { get; set; }
+    public ICollection<BoardGame2Mechanic>? BoardGame2Mechanic { get; set; }
 }
