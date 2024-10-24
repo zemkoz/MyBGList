@@ -5,3 +5,8 @@ Accept: application/json
 
 ###
 
+PUT {{Host}}/api/seed
+Accept: application/json
+
+###
+
