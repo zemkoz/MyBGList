@@ -20,6 +20,11 @@ Accept: application/json
 
 ###
 
+GET {{Host}}/api/board-games?filterQuery=diplomacy
+Accept: application/json
+
+###
+
 PUT {{Host}}/api/seed
 Accept: application/json
 

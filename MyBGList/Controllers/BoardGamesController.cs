@@ -14,15 +14,23 @@ public class BoardGamesController(
     [HttpGet(Name = "GetBoardGames")]
     [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 120)]
     public async Task<RestDTO<BoardGame[]>> GetBoardGames(
-        int pageIndex = 0,
-        int pageSize = 10)
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string filterQuery = "")
     {
-        var boardGamesArray = await dbContext.BoardGames
+        var query = dbContext.BoardGames.AsQueryable();
+        if (!string.IsNullOrWhiteSpace(filterQuery))
+        {
+            query = query.Where(b => b.Name.Contains(filterQuery));
+        }
+        
+        var boardGamesArray = await query
+            .OrderBy(b => b.Name)
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
             .ToArrayAsync();
 
-        var recordCount = await dbContext.BoardGames.CountAsync();
+        var recordCount = await query.CountAsync();
         
         var links = new List<LinkDTO>
         {
