@@ -5,6 +5,21 @@ Accept: application/json
 
 ###
 
+GET {{Host}}/api/board-games?pageIndex=0&pageSize=5
+Accept: application/json
+
+###
+
+GET {{Host}}/api/board-games?pageIndex=1&pageSize=5
+Accept: application/json
+
+###
+
+GET {{Host}}/api/board-games?pageIndex=2&pageSize=5
+Accept: application/json
+
+###
+
 PUT {{Host}}/api/seed
 Accept: application/json
 

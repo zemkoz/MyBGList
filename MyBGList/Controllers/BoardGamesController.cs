@@ -13,9 +13,17 @@ public class BoardGamesController(
 {
     [HttpGet(Name = "GetBoardGames")]
     [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 120)]
-    public async Task<RestDTO<BoardGame[]>> GetBoardGames()
+    public async Task<RestDTO<BoardGame[]>> GetBoardGames(
+        int pageIndex = 0,
+        int pageSize = 10)
     {
-        var boardGamesArray = await dbContext.BoardGames.ToArrayAsync();
+        var boardGamesArray = await dbContext.BoardGames
+            .Skip(pageSize * pageIndex)
+            .Take(pageSize)
+            .ToArrayAsync();
+
+        var recordCount = await dbContext.BoardGames.CountAsync();
+        
         var links = new List<LinkDTO>
         {
             new LinkDTO(
@@ -27,7 +35,10 @@ public class BoardGamesController(
         return new RestDTO<BoardGame[]>
         {
             Data = boardGamesArray,
-            Links = links
+            Links = links,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            RecordCount = recordCount
         };
     }
 }
