@@ -52,29 +52,32 @@ public class BoardGamesController(
     
     [HttpPost(Name = "UpdateBoardGame")]
     [ResponseCache(NoStore = true)]
-    public async Task<RestDTO<BoardGame?>> Post(BoardGameDTO model)
+    public async Task<ActionResult<RestDTO<BoardGame?>>> Post(BoardGameDTO model)
     {
         var boardgame = await dbContext.BoardGames
             .Where(b => b.Id == model.Id)
             .FirstOrDefaultAsync();
-        if (boardgame != null)
+        
+        if (boardgame == null)
         {
-            if (!string.IsNullOrEmpty(model.Name))
-            {
-                boardgame.Name = model.Name;
-            }
-
-            if (model.Year is > 0)
-            {
-                boardgame.Year = model.Year.Value;
-            }
-
-            boardgame.LastModifiedDate = DateTime.Now;
-            dbContext.BoardGames.Update(boardgame);
-            await dbContext.SaveChangesAsync();
+            return NotFound();
         }
 
-        return new RestDTO<BoardGame?>()
+        if (!string.IsNullOrEmpty(model.Name))
+        {
+            boardgame.Name = model.Name;
+        }
+
+        if (model.Year is > 0)
+        {
+            boardgame.Year = model.Year.Value;
+        }
+
+        boardgame.LastModifiedDate = DateTime.Now;
+        dbContext.BoardGames.Update(boardgame);
+        await dbContext.SaveChangesAsync();
+
+        var restDto = new RestDTO<BoardGame?>()
         {
             Data = boardgame,
             Links = new List<LinkDTO>
@@ -89,5 +92,41 @@ public class BoardGamesController(
                     "POST"),
             }
         };
+        
+        return Ok(restDto);
+    }
+    
+    [HttpDelete(Name = "DeleteBoardGame")]
+    [ResponseCache(NoStore = true)]
+    public async Task<ActionResult<RestDTO<BoardGame?>>> Delete(int id)
+    {
+        var boardgame = await dbContext.BoardGames
+            .Where(b => b.Id == id)
+            .FirstOrDefaultAsync();
+        if (boardgame == null)
+        {
+            return NotFound();
+        }
+        
+        dbContext.BoardGames.Remove(boardgame);
+        await dbContext.SaveChangesAsync();
+
+        var restDto = new RestDTO<BoardGame?>()
+        {
+            Data = boardgame,
+            Links = new List<LinkDTO>
+            {
+                new LinkDTO(
+                    Url.Action(
+                        null,
+                        "BoardGames",
+                        id,
+                        Request.Scheme)!,
+                    "self",
+                    "DELETE"),
+            }
+        };
+
+        return Ok(restDto);
     }
 }
